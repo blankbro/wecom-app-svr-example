@@ -4,6 +4,7 @@ import (
 	"gopkg.in/yaml.v3"
 	"log"
 	"os"
+	"strings"
 )
 
 type Config struct {
@@ -33,7 +34,7 @@ func LoadConfig() Config {
 		}
 	}
 	if err != nil {
-		log.Fatalf("未搜索到配置文件, 搜索目录为: %v", configDirs)
+		log.Fatalf("未加载到配置文件, 加载顺序: %s", strings.Join(configDirs, ", "))
 	}
 
 	configObj := Config{}
