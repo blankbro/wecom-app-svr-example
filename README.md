@@ -1,1 +1,1 @@
-# wecom-app-svr-sample
+# wecom-app-svr-example
