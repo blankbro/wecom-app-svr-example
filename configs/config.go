@@ -1,8 +1,8 @@
 package config
 
 import (
+	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
-	"log"
 	"os"
 	"strings"
 )
@@ -34,13 +34,13 @@ func LoadConfig() Config {
 		}
 	}
 	if err != nil {
-		log.Fatalf("未加载到配置文件, 加载顺序: %s", strings.Join(configDirs, ", "))
+		logrus.Fatalf("未加载到配置文件, 加载顺序: %s", strings.Join(configDirs, ", "))
 	}
 
 	configObj := Config{}
 	err = yaml.Unmarshal(bytes, &configObj)
 	if err != nil {
-		log.Fatalf("解析 yml 文件失败: %v", err)
+		logrus.Fatalf("解析 yml 文件失败: %v", err)
 	}
 	return configObj
 }
