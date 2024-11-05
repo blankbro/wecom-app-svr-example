@@ -1,0 +1,7 @@
+server:
+  port: 8080
+wecom:
+  token: 123
+  aes_key: 123
+  corp_id: 123
+  path: /123
