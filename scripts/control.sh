@@ -53,7 +53,7 @@ Stop(){
 
 Start(){
   echo "nohup ./$scriptFile > /dev/null 2>&1 &"
-  nohup ./$scriptFile > /dev/null 2>&1 &
+  nohup ./$scriptFile -config=config.yml > /dev/null 2>&1 &
   for ((i=0; i<5; ++i))
     do
       sleep 1

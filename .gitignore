@@ -1,4 +1,6 @@
-configs/config.yml
 .idea
 output
 logs
+configs
+!configs/config.go
+!configs/config.yml.template

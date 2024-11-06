@@ -4,12 +4,12 @@ import (
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
 	"os"
-	"strings"
 )
 
 type Config struct {
 	Server Server
 	Wecom  WeCom
+	Dify   Dify
 }
 
 type Server struct {
@@ -23,24 +23,27 @@ type WeCom struct {
 	Path   string
 }
 
-func LoadConfig() Config {
-	configDirs := []string{"configs/config.yml", "config.yml", "../../configs/config.yml"}
-	var bytes []byte
-	var err error
-	for _, configDir := range configDirs {
-		bytes, err = os.ReadFile(configDir)
-		if err == nil {
-			break
-		}
-	}
+type Dify struct {
+	Host   string `yaml:"host"`
+	ApiKey string `yaml:"api_key"`
+}
+
+func LoadConfig(configPath string) Config {
+	logrus.Infof("Using config file: %s", configPath)
+
+	bytes, err := os.ReadFile(configPath)
 	if err != nil {
-		logrus.Fatalf("未加载到配置文件, 加载顺序: %s", strings.Join(configDirs, ", "))
+		logrus.Fatalf("read config file error: %s", err.Error())
 	}
 
 	configObj := Config{}
 	err = yaml.Unmarshal(bytes, &configObj)
 	if err != nil {
-		logrus.Fatalf("解析 yml 文件失败: %v", err)
+		logrus.Fatalf("unmarshal config file error: %s", err.Error())
 	}
+
+	logrus.Infof("config server → %+v", configObj.Server)
+	logrus.Infof("config wecom → %+v", configObj.Wecom)
+	logrus.Infof("config dify → %+v", configObj.Dify)
 	return configObj
 }
