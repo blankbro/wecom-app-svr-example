@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"wecom-app-svr-sample/configs"
-	"wecom-app-svr-sample/utils/log_util"
+	"wecom-app-to-dify/configs"
+	"wecom-app-to-dify/utils/log_util"
 )
 
 func init() {

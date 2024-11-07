@@ -1,4 +1,4 @@
-module wecom-app-svr-sample
+module wecom-app-to-dify
 
 go 1.22
 

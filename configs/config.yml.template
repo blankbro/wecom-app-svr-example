@@ -4,7 +4,7 @@ wecom:
   token: 123
   aes_key: 123
   corp_id: 123
-  path: /123
+  path: /test
 dify:
-  host: xxxx
-  api_key: xxxx
+  host: https://api.dify.ai
+  api_key: app-xxx
