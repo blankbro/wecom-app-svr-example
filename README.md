@@ -3,7 +3,8 @@
 
 桥接 WeCom App 和 Dify，接收企微应用消息，然后转发到 Dify
 
-```sequenceDiagram
+```mermaid
+sequenceDiagram
   企微用户->>+WeCom App(Server): 发消息
   WeCom App(Server)->>+WeCom App To Dify: 回调企微后台配置的 HTTP 接口
   WeCom App To Dify->>+Dify: 调用 Dify /chat-messages 
