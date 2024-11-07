@@ -5,3 +5,6 @@ wecom:
   aes_key: 123
   corp_id: 123
   path: /123
+dify:
+  host: xxxx
+  api_key: xxxx

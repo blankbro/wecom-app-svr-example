@@ -1,10 +1,8 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"flag"
-	"fmt"
 	"github.com/blankbro/wecom-app-svr"
 	"github.com/langgenius/dify-sdk-go"
 	uuid "github.com/satori/go.uuid"
@@ -17,10 +15,45 @@ import (
 	"wecom-app-svr-sample/utils/log_util"
 )
 
-var userConversationId = map[string]string{}
-
 func init() {
 	log_util.Init()
+}
+
+func replyText(w http.ResponseWriter, fromMsg wecom_app_svr.MsgContent, replyText string) {
+	replyMsg := wecom_app_svr.MsgContent{
+		FromUsername: fromMsg.ToUsername,
+		ToUsername:   fromMsg.FromUsername,
+		AgentId:      fromMsg.AgentId,
+		CreateTime:   time.Now().Unix(),
+		MsgType:      "text",
+		MsgId:        fromMsg.MsgId,
+		Content:      replyText,
+	}
+	replyBytes, encryptErr := wecom_app_svr.EncryptMsgContent(
+		replyMsg,
+		strconv.FormatInt(replyMsg.CreateTime, 10),
+		uuid.NewV4().String(),
+	)
+	if encryptErr != nil {
+		logrus.Errorf("encryptMsgContent err: %v", encryptErr)
+		w.Write([]byte("我暂时遇到了一些问题，请您稍后重试~"))
+	} else {
+		w.Write(replyBytes)
+	}
+}
+
+var userConversation = map[string]string{}
+
+func setConversationId(username string, conversationId string) {
+	userConversation[username] = conversationId
+}
+
+func getConversationId(username string) string {
+	return userConversation[username]
+}
+
+func clearConversationId(username string) {
+	userConversation[username] = ""
 }
 
 func main() {
@@ -47,43 +80,36 @@ func main() {
 			}
 			if strings.HasPrefix(msgContent.Content, "#") {
 				if msgContent.Content == "#clear" {
-					userConversationId[msgContent.FromUsername] = ""
-					timestamp := time.Now().Unix()
-					responseMsgContent := wecom_app_svr.MsgContent{
-						FromUsername: msgContent.ToUsername,
-						ToUsername:   msgContent.FromUsername,
-						AgentId:      msgContent.AgentId,
-						CreateTime:   uint32(timestamp),
-						MsgType:      "text",
-						MsgId:        msgContent.MsgId,
-						Content:      "已重置",
-					}
-					timestampStr := strconv.FormatInt(timestamp, 10)
-					nonce := uuid.NewV4().String()
-					encryptedResponseMsgContentBytes, encryptErr := wecom_app_svr.EncryptMsgContent(responseMsgContent, timestampStr, nonce)
-					if encryptErr != nil {
-						logrus.Errorf("encryptMsgContent err: %v", encryptErr)
-						w.Write(bytes.NewBufferString(fmt.Sprintf("encryptMsgContent err: %v", encryptErr)).Bytes())
+					clearConversationId(msgContent.FromUsername)
+					replyText(w, msgContent, "已重置")
+					return
+				}
+				if msgContent.Content == "#get" {
+					conversationId := getConversationId(msgContent.FromUsername)
+					if conversationId == "" {
+						replyText(w, msgContent, "当前没有任何会话")
 					} else {
-						w.Write(encryptedResponseMsgContentBytes)
+						replyText(w, msgContent, "当前会话ID为: "+conversationId)
 					}
 					return
 				}
 			}
 
-			conversationId := userConversationId[msgContent.FromUsername]
-			resp, err := difyClient.Api().ChatMessages(context.Background(), &dify.ChatMessageRequest{
-				Query:          msgContent.Content,
-				User:           msgContent.FromUsername,
-				ConversationID: conversationId,
-			})
-			if err != nil {
-				logrus.Fatalf(err.Error())
-			}
-			logrus.Infof("resp: %+v", resp)
-			if conversationId == "" {
-				userConversationId[msgContent.FromUsername] = resp.ConversationID
-			}
+			go func() {
+				conversationId := getConversationId(msgContent.FromUsername)
+				resp, err := difyClient.Api().ChatMessages(context.Background(), &dify.ChatMessageRequest{
+					Query:          msgContent.Content,
+					User:           msgContent.FromUsername,
+					ConversationID: conversationId,
+				})
+				if err != nil {
+					logrus.Fatalf(err.Error())
+				}
+				logrus.Infof("resp: %+v", resp)
+				if conversationId == "" {
+					setConversationId(msgContent.FromUsername, resp.ConversationID)
+				}
+			}()
 		},
 	)
 }
