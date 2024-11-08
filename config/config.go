@@ -28,6 +28,8 @@ type Dify struct {
 	ApiKey string `yaml:"api_key"`
 }
 
+var Obj Config
+
 func LoadConfig(configPath string) Config {
 	logrus.Infof("Using config file: %s", configPath)
 
@@ -36,14 +38,14 @@ func LoadConfig(configPath string) Config {
 		logrus.Fatalf("read config file error: %s", err.Error())
 	}
 
-	configObj := Config{}
-	err = yaml.Unmarshal(bytes, &configObj)
+	Obj = Config{}
+	err = yaml.Unmarshal(bytes, &Obj)
 	if err != nil {
 		logrus.Fatalf("unmarshal config file error: %s", err.Error())
 	}
 
-	logrus.Infof("config server → %+v", configObj.Server)
-	logrus.Infof("config wecom → %+v", configObj.Wecom)
-	logrus.Infof("config dify → %+v", configObj.Dify)
-	return configObj
+	logrus.Infof("config server → %+v", Obj.Server)
+	logrus.Infof("config wecom → %+v", Obj.Wecom)
+	logrus.Infof("config dify → %+v", Obj.Dify)
+	return Obj
 }

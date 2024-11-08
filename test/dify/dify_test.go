@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"strings"
 	"testing"
-	"wecom-app-to-dify/configs"
+	"wecom-app-to-dify/config"
 	"wecom-app-to-dify/utils/log_util"
 )
 

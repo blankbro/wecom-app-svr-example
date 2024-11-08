@@ -1,6 +1,7 @@
 .idea
 output
 logs
-configs
-!configs/config.go
-!configs/config.yml.template
+config
+!config/config.go
+!config/config.yml.template
+user_conversation.json

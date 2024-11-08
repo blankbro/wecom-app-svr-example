@@ -24,6 +24,7 @@ func Init() {
 		TimestampFormat: time.DateTime,
 		CallerFirst:     true,
 		NoColors:        true,
+		ShowFullLevel:   true,
 		CustomCallerFormatter: func(frame *runtime.Frame) string {
 			return fmt.Sprintf(" %s:%d", frame.File, frame.Line)
 		},
