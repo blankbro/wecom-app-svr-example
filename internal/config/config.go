@@ -28,9 +28,12 @@ type Dify struct {
 	ApiKey string `yaml:"api_key"`
 }
 
+var Dir string
 var Obj Config
 
-func LoadConfig(configFilepath string) Config {
+func LoadConfig(configDir string) Config {
+	Dir = configDir
+	configFilepath := configDir + "/config.yml"
 	logrus.Infof("config file: %s", configFilepath)
 	bytes, err := os.ReadFile(configFilepath)
 	if err != nil {

@@ -28,7 +28,8 @@ sh script/build.sh
 tree output
 
 output
-├── config.yml                  # 配置文件
+├── configs                     # 配置文件目录，运行过程中产生的数据也会存储在这个目录中
+│   └── config.yml              # 配置文件
 ├── control.sh                  # 运行脚本（判断当前操作系统，执行对应的可执行文件）
 ├── linux_main                  # linux 系统可执行文件
 └── mac_main                    # mac 系统可执行文件

@@ -8,8 +8,8 @@ import (
 	"wecom-app-to-dify/internal/config"
 )
 
-var userConversation = map[string]string{}
-var fileName = config.UserConversationJsonPath
+var userConversation map[string]string
+var fileName string
 
 func setConversationId(username string, conversationId string) {
 	userConversation[username] = conversationId
@@ -30,6 +30,7 @@ func clearConversationId(username string) {
 }
 
 func loadUserConversation() {
+	fileName = config.Dir + "/user_conversation.json"
 	logrus.Infof("loading user conversation, from file: %s", fileName)
 
 	_, statErr := os.Stat(fileName)

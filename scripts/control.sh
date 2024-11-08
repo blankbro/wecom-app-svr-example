@@ -3,7 +3,6 @@
 # 发生错误则退出
 set -e
 
-
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")  # 当前脚本所在目录
 EXECUTABLE_FILE=""
 OS=$(uname)  # 当前操作系统类型
@@ -58,8 +57,8 @@ Stop(){
 }
 
 Start(){
-  echo "nohup $SCRIPT_DIR/$EXECUTABLE_FILE -config=$SCRIPT_DIR/config.yml -logpath=$SCRIPT_DIR/logs > /dev/null 2>&1 &"
-  nohup $SCRIPT_DIR/$EXECUTABLE_FILE -config=$SCRIPT_DIR/config.yml -logpath=$SCRIPT_DIR/logs > /dev/null 2>&1 &
+  echo "nohup $SCRIPT_DIR/$EXECUTABLE_FILE -logdir=$SCRIPT_DIR/logs -confdir=$SCRIPT_DIR/configs > /dev/null 2>&1 &"
+  nohup $SCRIPT_DIR/$EXECUTABLE_FILE -logdir=$SCRIPT_DIR/logs -confdir=$SCRIPT_DIR/configs > /dev/null 2>&1 &
   for ((i=0; i<5; ++i))
     do
       sleep 1

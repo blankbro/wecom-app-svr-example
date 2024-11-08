@@ -14,7 +14,7 @@ var client *dify.Client
 
 func init() {
 	log_util.Init("logs")
-	configObj := config.LoadConfig("../../configs/config.yml")
+	configObj := config.LoadConfig("../../configs")
 	var difyConfig = &dify.ClientConfig{Host: configObj.Dify.Host, DefaultAPISecret: configObj.Dify.ApiKey}
 	client = dify.NewClientWithConfig(difyConfig)
 }

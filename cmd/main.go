@@ -8,11 +8,12 @@ import (
 )
 
 func main() {
-	logPath := flag.String("logpath", "logs", "log path")
+	logDir := flag.String("logdir", "logs", "log dir")
+	confDir := flag.String("confdir", "configs", "conf dir")
 	flag.Parse()
 
-	log_util.Init(*logPath)
-	config.LoadConfig(config.ConfigYamlPath)
+	log_util.Init(*logDir)
+	config.LoadConfig(*confDir)
 
 	server.Run()
 }
