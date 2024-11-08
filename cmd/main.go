@@ -2,18 +2,17 @@ package main
 
 import (
 	"flag"
-	"wecom-app-to-dify/config"
-	"wecom-app-to-dify/server"
-	"wecom-app-to-dify/utils/log_util"
+	"wecom-app-to-dify/internal/config"
+	"wecom-app-to-dify/internal/log_util"
+	"wecom-app-to-dify/internal/server"
 )
 
 func main() {
-	configFilepath := flag.String("config", "config.yml", "config file path")
-	logPath := flag.String("logpath", "logs", "log file path")
+	logPath := flag.String("logpath", "logs", "log path")
 	flag.Parse()
 
 	log_util.Init(*logPath)
-	config.LoadConfig(*configFilepath)
+	config.LoadConfig(config.ConfigYamlPath)
 
 	server.Run()
 }

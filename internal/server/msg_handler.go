@@ -10,12 +10,12 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"wecom-app-to-dify/config"
+	"wecom-app-to-dify/internal/config"
 )
 
 var difyClient *dify.Client
 
-func initMsgHandler() {
+func initDifyClient() {
 	configObj := config.Obj
 
 	difyClientConfig := &dify.ClientConfig{

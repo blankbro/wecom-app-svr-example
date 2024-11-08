@@ -5,10 +5,11 @@ import (
 	"github.com/sirupsen/logrus"
 	"io"
 	"os"
+	"wecom-app-to-dify/internal/config"
 )
 
-var userConversation map[string]string
-var fileName = "user_conversation.json"
+var userConversation = map[string]string{}
+var fileName = config.UserConversationJsonPath
 
 func setConversationId(username string, conversationId string) {
 	userConversation[username] = conversationId

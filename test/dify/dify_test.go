@@ -6,8 +6,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"strings"
 	"testing"
-	"wecom-app-to-dify/config"
-	"wecom-app-to-dify/utils/log_util"
+	"wecom-app-to-dify/internal/config"
+	"wecom-app-to-dify/internal/log_util"
 )
 
 var client *dify.Client

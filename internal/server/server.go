@@ -2,12 +2,12 @@ package server
 
 import (
 	"github.com/blankbro/wecom-app-svr"
-	"wecom-app-to-dify/config"
+	"wecom-app-to-dify/internal/config"
 )
 
 func Run() {
 
-	initMsgHandler()
+	initDifyClient()
 	loadUserConversation()
 
 	configObj := config.Obj
