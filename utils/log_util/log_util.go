@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func Init() {
+func Init(logPath string) {
 	// Trace > Debug > Info > Warn > Error > Fatal > Panic
 	logrus.SetLevel(logrus.InfoLevel)
 
@@ -31,10 +31,10 @@ func Init() {
 	})
 
 	// 指定输出流
-	logFileName := "logs/info.log"
+	logFilename := logPath + "/info.log"
 	logWriter, err := rotatelogs.New(
-		logFileName+".%Y%m%d.log",                 // 分割后的文件名称
-		rotatelogs.WithLinkName(logFileName),      // 生成软链，指向最新日志文件
+		logFilename+".%Y%m%d.log",                 // 分割后的文件名称
+		rotatelogs.WithLinkName(logFilename),      // 生成软链，指向最新日志文件
 		rotatelogs.WithMaxAge(7*24*time.Hour),     // 设置最大保存时间(7天)
 		rotatelogs.WithRotationTime(24*time.Hour), // 设置日志切割时间间隔(1天)
 	)
@@ -43,4 +43,5 @@ func Init() {
 		os.Exit(1)
 	}
 	logrus.SetOutput(io.MultiWriter(os.Stdout, logWriter))
+	logrus.Infof("log init successful, log file: %s", logFilename)
 }

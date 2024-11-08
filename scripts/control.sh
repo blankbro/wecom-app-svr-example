@@ -1,25 +1,29 @@
 #!/bin/bash
 
-# 获取操作系统类型
-OS=$(uname)
-echo "当前操作系统为${OS}"
+# 发生错误则退出
+set -e
 
-scriptFile=""
+
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")  # 当前脚本所在目录
+EXECUTABLE_FILE=""
+OS=$(uname)  # 当前操作系统类型
+
+echo "当前操作系统为${OS}"
 if [ "${OS}" == "Darwin" ]; then
     echo "Running on macOS"
-    scriptFile="mac_main"
+    EXECUTABLE_FILE="mac_main"
 elif [ "${OS}" == "Linux" ]; then
     echo "Running on Linux"
-    scriptFile="linux_main"
+    EXECUTABLE_FILE="linux_main"
 else
     echo "Unsupported operating system: $OS"
     exit 1
 fi
 
 Ps(){
-  pid=$(pgrep $scriptFile)
-  if [ -n "$pid" ] ; then
-    echo "进程已启动: $pid"
+  echo "pgrep $EXECUTABLE_FILE"
+  if pgrep $EXECUTABLE_FILE ; then
+    echo "进程已启动"
   else
     echo "进程未启动"
   fi
@@ -27,14 +31,16 @@ Ps(){
 
 Stop(){
   # 检查是否存在进程
-  if pgrep $scriptFile > /dev/null; then
+  echo "pgrep $EXECUTABLE_FILE"
+  if pgrep $EXECUTABLE_FILE > /dev/null; then
       # 如果存在则通过kill命令杀死进程
       echo "开始关闭"
-      pkill $scriptFile
+      echo "pkill $EXECUTABLE_FILE"
+      pkill $EXECUTABLE_FILE
       for ((i=0; i<10; ++i))
         do
           sleep 1
-          if pgrep $scriptFile > /dev/null; then
+          if pgrep $EXECUTABLE_FILE > /dev/null; then
             echo -e ".\c"
           else
             echo 'Stop Success!'
@@ -42,9 +48,9 @@ Stop(){
           fi
         done
 
-      if pgrep $scriptFile > /dev/null; then
-        echo 'Kill Process!'
-        pkill -9 $scriptFile
+      if pgrep $EXECUTABLE_FILE > /dev/null; then
+        echo "pkill -9 $EXECUTABLE_FILE"
+        pkill -9 $EXECUTABLE_FILE
       fi
   else
       echo "进程已关闭"
@@ -52,19 +58,19 @@ Stop(){
 }
 
 Start(){
-  echo "nohup ./$scriptFile > /dev/null 2>&1 &"
-  nohup ./$scriptFile -config=config.yml > /dev/null 2>&1 &
+  echo "nohup $SCRIPT_DIR/$EXECUTABLE_FILE -config=$SCRIPT_DIR/config.yml -logpath=$SCRIPT_DIR/logs > /dev/null 2>&1 &"
+  nohup $SCRIPT_DIR/$EXECUTABLE_FILE -config=$SCRIPT_DIR/config.yml -logpath=$SCRIPT_DIR/logs > /dev/null 2>&1 &
   for ((i=0; i<5; ++i))
     do
       sleep 1
-      if ! pgrep $scriptFile > /dev/null; then
+      if ! pgrep $EXECUTABLE_FILE > /dev/null; then
         echo -e ".\c"
       else
         echo 'Start success!'
         break;
       fi
     done
-  if ! pgrep $scriptFile > /dev/null; then
+  if ! pgrep $EXECUTABLE_FILE > /dev/null; then
     echo "Start fail!"
   fi
 }

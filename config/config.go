@@ -30,22 +30,21 @@ type Dify struct {
 
 var Obj Config
 
-func LoadConfig(configPath string) Config {
-	logrus.Infof("Using config file: %s", configPath)
-
-	bytes, err := os.ReadFile(configPath)
+func LoadConfig(configFilepath string) Config {
+	logrus.Infof("config file: %s", configFilepath)
+	bytes, err := os.ReadFile(configFilepath)
 	if err != nil {
-		logrus.Fatalf("read config file error: %s", err.Error())
+		logrus.Fatalf("read config file error, %s", err)
 	}
 
 	Obj = Config{}
 	err = yaml.Unmarshal(bytes, &Obj)
 	if err != nil {
-		logrus.Fatalf("unmarshal config file error: %s", err.Error())
+		logrus.Fatalf("unmarshal config file error, %s", err)
 	}
 
-	logrus.Infof("config server → %+v", Obj.Server)
-	logrus.Infof("config wecom → %+v", Obj.Wecom)
-	logrus.Infof("config dify → %+v", Obj.Dify)
+	logrus.Infof("server config → %+v", Obj.Server)
+	logrus.Infof("wecom config → %+v", Obj.Wecom)
+	logrus.Infof("dify config → %+v", Obj.Dify)
 	return Obj
 }

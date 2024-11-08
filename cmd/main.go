@@ -7,15 +7,13 @@ import (
 	"wecom-app-to-dify/utils/log_util"
 )
 
-func init() {
-	log_util.Init()
-}
-
 func main() {
-	configPath := flag.String("config", "config.yml", "config file path")
+	configFilepath := flag.String("config", "config.yml", "config file path")
+	logPath := flag.String("logpath", "logs", "log file path")
 	flag.Parse()
 
-	config.LoadConfig(*configPath)
+	log_util.Init(*logPath)
+	config.LoadConfig(*configFilepath)
 
 	server.Run()
 }

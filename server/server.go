@@ -8,7 +8,7 @@ import (
 func Run() {
 
 	initMsgHandler()
-	initUserConversation()
+	loadUserConversation()
 
 	configObj := config.Obj
 	wecom_app_svr.Run(
